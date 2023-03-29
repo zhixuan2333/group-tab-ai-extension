@@ -6,9 +6,16 @@ Do not write explanations.
 Do not type other word.
 My first URL is
 `
-export function allTabsPrompt(tabs: chrome.tabs.Tab[]): string {
+export async function allTabsPrompt(tabs: chrome.tabs.Tab[]): Promise<string> {
+  if (tabs.length === 0) {
+    throw new Error("tabs is empty")
+  }
+
   const limtedTabs = tabs.slice(0, 100)
   const modifiedTabs = limtedTabs.map((tab) => {
+    if (tab.title === "") {
+      return
+    }
     return {
       id: tab.id,
       title: tab.title
