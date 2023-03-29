@@ -3,29 +3,34 @@ import { Storage } from "@plasmohq/storage"
 const storage = new Storage()
 
 export enum ProviderType {
-  OpenAI = "openai",
-  ChatGPT = "chatgpt"
+  Local = "local"
 }
 
-export interface OpenAIProviderConfig {
-  apiKey: string
-}
-
-export interface ChatGPTProviderConfig {
-  accessToken: string
-  reverseProxyURL?: string
+export interface LocalProviderConfig {
+  url: string
 }
 
 export interface ProviderConfigs {
   provider: ProviderType
   configs: {
-    [ProviderType.OpenAI]: OpenAIProviderConfig | null
-    [ProviderType.ChatGPT]: ChatGPTProviderConfig | null
+    [ProviderType.Local]: LocalProviderConfig | null
+  }
+}
+
+export const defaultProviderConfigs: ProviderConfigs = {
+  provider: ProviderType.Local,
+  configs: {
+    [ProviderType.Local]: {
+      url: ""
+    }
   }
 }
 
 export async function getProviderConfigs(): Promise<ProviderConfigs> {
   const providerConfigs = await storage.get<ProviderConfigs>("providerConfigs")
+  if (providerConfigs === undefined) {
+    return defaultProviderConfigs
+  }
   return providerConfigs
 }
 
