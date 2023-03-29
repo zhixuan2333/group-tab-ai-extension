@@ -21,5 +21,3 @@ The Format is [{group_name: string, ids: number[]}]
 Do not write explanations. Do not type other word.
 My url list is ${JSON.stringify(modifiedTabs)}`
 }
-
-type response = { group_name: string; ids: number[] }

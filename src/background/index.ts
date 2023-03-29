@@ -4,19 +4,7 @@ import { allTabsPrompt } from "./prompts"
 import { LocalProvider } from "./providers/local"
 import type { Provider } from "./types"
 
-export {}
-
-console.log(
-  "Live now; make now always the most precious time. Now will never come again.",
-  "hallo"
-)
-
-async function getCurrentTab(): Promise<chrome.tabs.Tab> {
-  let queryOptions = { active: true, lastFocusedWindow: true }
-  // `tab` will either be a `tabs.Tab` instance or `undefined`.
-  let [tab] = await chrome.tabs.query(queryOptions)
-  return tab
-}
+console.log("👋 Hi! Auto group tabs extension is running now!")
 
 async function getAllTabs(): Promise<chrome.tabs.Tab[]> {
   // `tab` will either be a `tabs.Tab` instance or `undefined`.
@@ -37,28 +25,53 @@ async function getProvider(): Promise<Provider> {
 }
 
 async function grounpTabs(data: Group[]) {
+  const tabs = await getAllTabs()
   data.forEach(async (group) => {
-    if (
-      group.ids.length === 1 ||
-      group.ids.length === 0 ||
-      group.group_name === "" ||
-      group.group_name === "Other" ||
-      group.group_name === "other" ||
-      group.group_name === "Others" ||
-      group.group_name === "others"
-    ) {
+    // At some time, they are return empty group name and like "other", "others", "miscellaneous".
+    // So we need to filter out these group
+    switch (group.group_name) {
+      case "":
+      case "Other":
+      case "other":
+      case "Others":
+      case "others":
+      case "Miscellaneous":
+      case "miscellaneous":
+        return
+      default:
+        break
+    }
+
+    // Because AI is take many time to response,
+    // So we need to filter out the tabs that are not exist
+    const ids = group.ids.filter((id) => {
+      return tabs.find((tab) => tab.id === id)
+    })
+
+    // If there is only one tab in the group, we don't need to group it
+    if (ids.length === 1 || ids.length === 0) {
       return
     }
-    const g = await chrome.tabs.group({ tabIds: group.ids })
-    chrome.tabGroups.update(g, { title: group.group_name, collapsed: true })
+
+    const g = await chrome.tabs.group({ tabIds: ids })
+    chrome.tabGroups.update(g, {
+      title: "🤖 | " + group.group_name,
+      collapsed: true
+    })
   })
-  const tabs = await chrome.tabs.query({
-    windowId: chrome.windows.WINDOW_ID_CURRENT,
-    groupId: chrome.tabGroups.TAB_GROUP_ID_NONE
-  })
-  tabs.forEach(async (tab) => {
-    await chrome.tabs.move(tab.id, { index: -1 })
-  })
+
+  // Move all non grouped tabs to the end
+  await chrome.tabs.query(
+    {
+      windowId: chrome.windows.WINDOW_ID_CURRENT,
+      groupId: chrome.tabGroups.TAB_GROUP_ID_NONE
+    },
+    (tabs) => {
+      tabs.forEach(async (tab) => {
+        await chrome.tabs.move(tab.id, { index: -1 })
+      })
+    }
+  )
 }
 
 chrome.tabs.onCreated.addListener(async (tab) => {
@@ -71,7 +84,6 @@ chrome.commands.onCommand.addListener(async (command) => {
       const tabs = await getAllTabs()
       const provider = await getProvider()
       const prompts = allTabsPrompt(tabs)
-      console.log("prompts", prompts)
       // const response = await provider.generate(prompts)
       // console.log("response", response)
       const resp: Group[] = JSON.parse(response)
@@ -90,7 +102,7 @@ interface Group {
   ids: number[]
 }
 
-const response = `[{"group_name":"Debugging","ids":[60156437,60156489,60156505,60156524,60156537,60156721,60156786,60156571,60156599,60156586,60156590,60156593,60156598,60156614,60156732,60156739]},
+const response = `[{"group_name":"Debugging","ids":[60156437,60156489,60156505,60156524,60156721,60156786,60156571,60156599,60156586,60156590,60156593,60156598,60156614,60156732,60156739]},
 {"group_name":"Docker","ids":[60156707,60156712]},
 {"group_name":"Port Checking","ids":[60156556,60156560,60156563]},
 {"group_name":"CORS","ids":[60156568,60156786,60156575,60156578]},
