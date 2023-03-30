@@ -1,7 +1,6 @@
 import { ProviderConfigs, ProviderType, getProviderConfigs } from "~config"
 
 import { allTabsPrompt } from "./prompts"
-import { LocalProvider } from "./providers/local"
 import { OpenAIProvider } from "./providers/openai"
 import type { Provider } from "./types"
 
@@ -16,16 +15,13 @@ async function unGroupingTabs(windowId: number = -2) {
 
 async function getProvider(): Promise<Provider> {
   let config: ProviderConfigs = await getProviderConfigs()
-  console.log(config)
   switch (config.provider) {
     case ProviderType.Local:
-      return new LocalProvider("http://localhost:8000/ask")
     case ProviderType.OpenAI:
+    default:
       return new OpenAIProvider(
         config.configs[ProviderType.OpenAI]?.token ?? ""
       )
-    default:
-      return new LocalProvider("http://localhost:8000/ask")
   }
 }
 
@@ -87,6 +83,9 @@ async function grounpTabs(data: Group[], windowId: number = -2) {
 
 chrome.commands.onCommand.addListener(async (command) => {
   switch (command) {
+    case "ungroup-all-tabs":
+      await unGroupingTabs()
+      break
     case "all-tabs":
       // The GPT response is take many time to response,
       // The last windows maybe change to another windows
@@ -98,25 +97,18 @@ chrome.commands.onCommand.addListener(async (command) => {
       })
 
       let prompts: string = await allTabsPrompt(tabs)
-        .catch((error: Error) => {
-          console.error(error)
-          return
-        })
-        // If there is an error, will return.
-        // But eslint say the prompts type is string | void.
-        // So we need to return an empty string.
-        .then(() => "")
 
       const provider = await getProvider()
       const response = await provider.generate(prompts)
 
+      let resp: Group[] = null
       // Parse response
-      const resp: Group[] = await JSON.parse(response)
-        .catch((error) => {
-          console.error(error)
-          return
-        })
-        .then(() => null)
+      try {
+        resp = await JSON.parse(response)
+      } catch (error) {
+        console.log(error)
+        return
+      }
       console.log(resp)
 
       await grounpTabs(resp, windowId)

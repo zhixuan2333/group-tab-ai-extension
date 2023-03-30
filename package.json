@@ -8,6 +8,7 @@
     "dev": "plasmo dev",
     "dev:edge": "plasmo dev --target=edge-mv3",
     "build": "plasmo build",
+    "build:edge": "plasmo build --target=edge-mv3",
     "package": "plasmo package"
   },
   "dependencies": {
@@ -36,10 +37,17 @@
     "commands": {
       "all-tabs": {
         "suggested_key": {
-          "default": "Ctrl+Shift+Y",
-          "mac": "Command+Shift+Y"
+          "default": "Alt+Q",
+          "mac": "Alt+Q"
         },
         "description": "Regrouping all tabs."
+      },
+      "ungroup-all-tabs": {
+        "suggested_key": {
+          "default": "Alt+A",
+          "mac": "Alt+A"
+        },
+        "description": "Ungrouping all tabs."
       }
     }
   }

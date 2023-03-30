@@ -1,6 +1,8 @@
 import { Storage } from "@plasmohq/storage"
 
-const storage = new Storage()
+const storage = new Storage({
+  area: "sync"
+})
 
 export enum ProviderType {
   Local = "local",
