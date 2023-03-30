@@ -1,7 +1,7 @@
 {
   "name": "auto-group-tag-extension",
   "displayName": "Auto group tag",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A extension can auto gourping with AI",
   "author": "zhixuan2333",
   "scripts": {
