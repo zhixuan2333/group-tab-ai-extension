@@ -129,3 +129,21 @@ interface Group {
   group_name: string
   ids: number[]
 }
+
+// Add listener for install and update
+// If is first install, show the setup tab
+chrome.runtime.onInstalled.addListener(async (e) => {
+  switch (e.reason) {
+    case "install":
+      console.log("👋 Hi! Auto group tabs extension is running now!")
+      await chrome.tabs.create({
+        url: chrome.runtime.getURL("tabs/index.html")
+      })
+      break
+    case "update":
+      console.log("👋 Hi! Auto group tabs extension is running now!")
+      break
+    default:
+      break
+  }
+})
