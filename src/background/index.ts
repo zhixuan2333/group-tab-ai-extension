@@ -6,7 +6,9 @@ import type { Provider } from "./types"
 
 console.log("👋 Hi! Auto group tabs extension is running now!")
 
-async function unGroupingTabs(windowId: number = -2) {
+async function unGroupingTabs(
+  windowId: number = chrome.windows.WINDOW_ID_CURRENT
+) {
   const tabs = await chrome.tabs.query({ windowId })
   tabs.forEach(async (tab) => {
     await chrome.tabs.ungroup(tab.id)
@@ -25,7 +27,10 @@ async function getProvider(): Promise<Provider> {
   }
 }
 
-async function grounpTabs(data: Group[], windowId: number = -2) {
+async function grounpTabs(
+  data: Group[],
+  windowId: number = chrome.windows.WINDOW_ID_CURRENT
+) {
   console.log("ungrouping all tabs")
   await unGroupingTabs(windowId)
   const tabs = await chrome.tabs.query({ windowId })
@@ -124,5 +129,3 @@ interface Group {
   group_name: string
   ids: number[]
 }
-
-const response = `[{\"group_name\":\"API Development\",\"ids\":[60156786,60156568,60156578,60156732,60156739,60157224,60157227,60157206]}, {\"group_name\":\"OpenAI\",\"ids\":[60157206,60157191,60156917,60156920,60156924,60157206,60157241]}, {\"group_name\":\"Docker\",\"ids\":[60156712,60156707]}, {\"group_name\":\"Chrome Extension\",\"ids\":[60156752,60156774,60156742,60156756,60157198]}, {\"group_name\":\"Utility\",\"ids\":[60156560,60156563,60156571,60156581,60156598,60156889,60157221,60157257,60157272,60156734]}, {\"group_name\":\"Miscellaneous\",\"ids\":[60157275,60157291,60157218,60157258,60157279,60156589,60157215,60156803,60156902,60156489,60156911,60156862,60156437,60156773,60156874,60156670,60157188,60157276]}]`

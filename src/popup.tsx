@@ -58,6 +58,27 @@ function IndexPopup() {
           Save
         </button>
       </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          width: "100%",
+          gap: 10
+        }}>
+        <button
+          style={{
+            width: "100%"
+          }}>
+          Group Tabs
+        </button>
+        <button
+          style={{
+            width: "100%"
+          }}>
+          unGroup Tabs
+        </button>
+      </div>
       <a href={chrome.runtime.getURL("tabs/index.html")} target="_blank">
         Did you need halp?
       </a>
