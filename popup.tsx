@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Check, Loader, X } from "tabler-icons-react"
+import { Check, FolderX, Folders, Loader, X } from "tabler-icons-react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
@@ -11,12 +11,7 @@ import style from "~popup.module.css"
 function IndexPopup() {
   const [data, setData] = useState("")
   const [isSaved, setIsSaved] = useState(0)
-  const [config, setConfig] = useStorage<ProviderConfigs>({
-    key: "providerConfigs",
-    instance: new Storage({
-      area: "sync"
-    })
-  })
+  const [config, setConfig] = useStorage<ProviderConfigs>("providerConfigs")
 
   useEffect(() => {
     console.log(config)
@@ -62,7 +57,7 @@ function IndexPopup() {
         paddingTop: 8,
         gap: 2
       }}>
-      <h2>Type your open AI token here. And click save.</h2>
+      <h2>Type your openAI token here.</h2>
       <div
         style={{
           display: "flex",
@@ -99,18 +94,11 @@ function IndexPopup() {
           width: "100%",
           gap: 10
         }}>
-        <button
-          style={{
-            width: "100%"
-          }}>
-          Group Tabs
+        <button onClick={() => sendToBackground({ name: "groupAllTabs" })}>
+          <Folders size={20} />
         </button>
-        <button
-          style={{
-            width: "100%"
-          }}
-          onClick={() => sendToBackground({ name: "unGroupAllTabs" })}>
-          unGroup Tabs
+        <button onClick={() => sendToBackground({ name: "unGroupAllTabs" })}>
+          <FolderX size={20} />
         </button>
       </div>
       <a href={chrome.runtime.getURL("tabs/index.html")} target="_blank">

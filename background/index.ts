@@ -3,6 +3,7 @@ import { unGroupAllTabs } from "./command/unGroupAllTabs"
 
 console.log("👋 Hi! Auto group tabs extension is running now!")
 
+// Add Shortcut listener
 chrome.commands.onCommand.addListener(async (command) => {
   switch (command) {
     case "ungroup-all-tabs":
@@ -10,8 +11,6 @@ chrome.commands.onCommand.addListener(async (command) => {
       break
     case "all-tabs":
       await groupAllTabs()
-      break
-    case "one-tab":
       break
     default:
       break
@@ -23,13 +22,9 @@ chrome.commands.onCommand.addListener(async (command) => {
 chrome.runtime.onInstalled.addListener(async (e) => {
   switch (e.reason) {
     case "install":
-      console.log("👋 Hi! Auto group tabs extension is running now!")
       await chrome.tabs.create({
         url: chrome.runtime.getURL("tabs/index.html")
       })
-      break
-    case "update":
-      console.log("👋 Hi! Auto group tabs extension is running now!")
       break
     default:
       break
