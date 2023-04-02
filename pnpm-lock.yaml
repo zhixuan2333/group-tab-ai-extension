@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@plasmohq/messaging':
-    specifier: 0.1.6
-    version: 0.1.6(react@18.2.0)
+    specifier: ^0.1.7
+    version: 0.1.7(react@18.2.0)
   '@plasmohq/storage':
     specifier: ^1.3.1
     version: 1.3.1(react@18.2.0)
@@ -1780,8 +1780,8 @@ packages:
     resolution: {integrity: sha512-4fA29jzUU5tHpsJ3rpUEbt/jme/aCDIqolAbTWd6F7M4rJ/33q4mVQ6eIflWjUhVNcygjpjMApdT2gIrNQi0fw==}
     dev: false
 
-  /@plasmohq/messaging@0.1.6(react@18.2.0):
-    resolution: {integrity: sha512-GYryyzijju3dg3RwMGoEIuGct0vgxdBfxZH/54GPh7ZbjYvOVikyfLp7Rn9rsrGqXLdsJ8+YeHUCgQEPvBJakA==}
+  /@plasmohq/messaging@0.1.7(react@18.2.0):
+    resolution: {integrity: sha512-6B6Udnf3nmMCra0dVfPAyZWQtSxhZQVAW4Hdxfj//kXtnGD+glkqw1xhE+FQzv2AZTGlV7KBGpgyBmB0DpzRdg==}
     peerDependencies:
       react: ^16.8.6 || ^17 || ^18
     peerDependenciesMeta:
