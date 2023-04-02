@@ -39,7 +39,10 @@ async function grounpTabs(
 ) {
   console.log("ungrouping all tabs")
 
-  const unGroupTabs = await chrome.tabs.query({ windowId, groupId: -1 })
+  const unGroupTabs = await chrome.tabs.query({
+    windowId,
+    groupId: chrome.tabGroups.TAB_GROUP_ID_NONE
+  })
   unGroupTabs.forEach(async (tab) => {
     await chrome.tabs.ungroup(tab.id)
   })
