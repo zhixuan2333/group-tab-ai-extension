@@ -1,6 +1,6 @@
-import done from "data-base64:../../assets/gif/done.gif"
-import time from "data-base64:../../assets/gif/time.gif"
-import apikeyImage from "data-base64:../../assets/images/api_key.png"
+import done from "data-base64:~assets/gif/done.gif"
+import time from "data-base64:~assets/gif/time.gif"
+import apikeyImage from "data-base64:~assets/images/api_key.png"
 import type { ReactElement } from "react"
 
 type ImageProps = {

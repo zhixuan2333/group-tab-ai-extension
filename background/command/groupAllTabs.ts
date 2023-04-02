@@ -1,12 +1,17 @@
 import { allTabsPrompt } from "~background/prompts"
 import { getProvider } from "~background/providers"
 
-export async function groupAllTabs() {
+export async function groupAllTabs(windowID?: number) {
   // The GPT response is take many time to response,
   // The last windows maybe change to another windows
   // So we need to get the current window id
-  const window = await chrome.windows.get(chrome.windows.WINDOW_ID_CURRENT)
-  const windowId = window.id
+  let windowId: number = null
+  if (windowID) {
+    windowId = windowID
+  } else {
+    const window = await chrome.windows.getCurrent()
+    windowId = window.id
+  }
   const tabs = await chrome.tabs.query({
     windowId: windowId
   })
@@ -17,7 +22,6 @@ export async function groupAllTabs() {
   const response = await provider.generate(prompts)
 
   let resp: Group[] = null
-  // Parse response
   try {
     resp = await JSON.parse(response)
   } catch (error) {
