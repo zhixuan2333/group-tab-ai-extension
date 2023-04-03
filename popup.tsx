@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { FolderX, Folders } from "tabler-icons-react"
 
 import { sendToBackground } from "@plasmohq/messaging"
@@ -11,10 +10,6 @@ function IndexPopup() {
   const [config, setConfig] = useStorage<ProviderConfigs | undefined>(
     "providerConfigs"
   )
-
-  useEffect(() => {
-    console.log("config", config)
-  }, [config])
 
   return (
     <div

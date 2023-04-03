@@ -15,7 +15,6 @@ export default function AutoSaveInput({ value, onChange, style }: Props) {
   const [isSaved, setIsSaved] = useState(0)
 
   useEffect(() => {
-    console.log("value", value)
     if (value) {
       setIsSaved(1)
     } else {
