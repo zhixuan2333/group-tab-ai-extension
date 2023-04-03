@@ -1,15 +1,14 @@
 import done from "data-base64:~assets/gif/done.gif"
 import time from "data-base64:~assets/gif/time.gif"
 import apikeyImage from "data-base64:~assets/images/api_key.png"
-import { ReactElement, useEffect, useState } from "react"
-import { Check, Folders, Loader, X } from "tabler-icons-react"
+import type { ReactElement } from "react"
+import { Folders } from "tabler-icons-react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 import { useStorage } from "@plasmohq/storage/hook"
 
+import AutoSaveInput from "~components/autoSaveInput"
 import { ProviderConfigs, ProviderType } from "~config"
-
-import style from "./index.module.css"
 
 type ImageProps = {
   src: string
@@ -33,44 +32,10 @@ function Image({ src, alt, width = "100px" }: ImageProps): ReactElement {
 }
 
 function IndexPage() {
-  const [data, setData] = useState("")
-  const [isSaved, setIsSaved] = useState(0)
-  const [config, setConfig] = useStorage<ProviderConfigs>("providerConfigs")
+  const [config, setConfig] = useStorage<ProviderConfigs | undefined>(
+    "providerConfigs"
+  )
 
-  useEffect(() => {
-    console.log(config)
-    if (config === undefined || config.configs === undefined) {
-      return
-    }
-    if (
-      config.configs[ProviderType.OpenAI] &&
-      config.configs[ProviderType.OpenAI].token
-    ) {
-      setIsSaved(1)
-    }
-  }, [config])
-
-  useEffect(() => {
-    if (data === "") {
-      setIsSaved(-1)
-      return
-    }
-    setIsSaved(0)
-    const timer = setTimeout(() => {
-      setConfig({
-        provider: ProviderType.OpenAI,
-        configs: {
-          ...config.configs,
-          [ProviderType.OpenAI]: {
-            token: data
-          }
-        }
-      })
-      setIsSaved(1)
-    }, 2 * 1000)
-
-    return () => clearTimeout(timer)
-  }, [data])
   return (
     <div
       style={{
@@ -96,28 +61,23 @@ function IndexPage() {
       </p>
       <Image src={apikeyImage} alt="apikey" width="100%" />
       <h3>🟢 | Then we need to save the token.</h3>
-      <p>And type your OpenAI here and save!</p>
-      <div
+      <p>And type your OpenAI here and save! </p>
+      <AutoSaveInput
         style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: "5px",
-          alignItems: "center"
-        }}>
-        <input
-          onChange={(e) => setData(e.target.value)}
-          value={data}
-          placeholder="sk-xxxxx"
-          type="password"
-        />
-        <div>
-          {isSaved === -1 ? <X size={20} color="#ff2825" /> : null}
-          {isSaved === 1 ? <Check size={20} color="#00d26a" /> : null}
-          {isSaved === 0 ? (
-            <Loader size={20} className={style.rotating} />
-          ) : null}
-        </div>
-      </div>
+          justifyContent: "left"
+        }}
+        value={config?.configs[ProviderType.OpenAI]?.token || ""}
+        onChange={(value) => {
+          setConfig((state) => ({
+            ...state,
+            configs: {
+              ...state?.configs,
+              [ProviderType.OpenAI]: { token: value }
+            }
+          }))
+        }}
+      />
+
       <h3>🟢 | Now we can start grouping our tabs.</h3>
       <p>
         Click on the extension icon and click this button.{" "}

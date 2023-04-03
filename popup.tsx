@@ -1,51 +1,20 @@
-import { useEffect, useState } from "react"
-import { Check, FolderX, Folders, Loader, X } from "tabler-icons-react"
+import { useEffect } from "react"
+import { FolderX, Folders } from "tabler-icons-react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 import { useStorage } from "@plasmohq/storage/hook"
 
+import AutoSaveInput from "~components/autoSaveInput"
 import { ProviderConfigs, ProviderType } from "~config"
-import style from "~popup.module.css"
 
 function IndexPopup() {
-  const [data, setData] = useState("")
-  const [isSaved, setIsSaved] = useState(0)
-  const [config, setConfig] = useStorage<ProviderConfigs>("providerConfigs")
+  const [config, setConfig] = useStorage<ProviderConfigs | undefined>(
+    "providerConfigs"
+  )
 
   useEffect(() => {
-    console.log(config)
-    if (config === undefined || config.configs === undefined) {
-      return
-    }
-    if (
-      config.configs[ProviderType.OpenAI] &&
-      config.configs[ProviderType.OpenAI].token
-    ) {
-      setIsSaved(1)
-    }
+    console.log("config", config)
   }, [config])
-
-  useEffect(() => {
-    if (data === "") {
-      setIsSaved(-1)
-      return
-    }
-    setIsSaved(0)
-    const timer = setTimeout(() => {
-      setConfig({
-        provider: ProviderType.OpenAI,
-        configs: {
-          ...config.configs,
-          [ProviderType.OpenAI]: {
-            token: data
-          }
-        }
-      })
-      setIsSaved(1)
-    }, 2 * 1000)
-
-    return () => clearTimeout(timer)
-  }, [data])
 
   return (
     <div
@@ -57,35 +26,18 @@ function IndexPopup() {
         gap: 2
       }}>
       <h2>Type your openAI token here.</h2>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: "1rem"
-        }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "5px",
-            alignItems: "center",
-            justifyContent: "center"
-          }}>
-          <input
-            onChange={(e) => setData(e.target.value)}
-            value={data}
-            placeholder="sk-xxxxx"
-            type="password"
-          />
-          <div>
-            {isSaved === -1 ? <X size={20} color="#ff2825" /> : null}
-            {isSaved === 1 ? <Check size={20} color="#00d26a" /> : null}
-            {isSaved === 0 ? (
-              <Loader size={20} className={style.rotating} />
-            ) : null}
-          </div>
-        </div>
-      </div>
+      <AutoSaveInput
+        value={config?.configs?.openai?.token || ""}
+        onChange={(value) => {
+          setConfig((state) => ({
+            ...state,
+            configs: {
+              ...state?.configs,
+              [ProviderType.OpenAI]: { token: value }
+            }
+          }))
+        }}
+      />
       <div
         style={{
           display: "flex",

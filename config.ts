@@ -28,10 +28,10 @@ export interface ProviderConfigs {
 export const defaultProviderConfigs: ProviderConfigs = {
   provider: ProviderType.Local,
   configs: {
-    [ProviderType.Local]: {
+    local: {
       url: ""
     },
-    [ProviderType.OpenAI]: {
+    openai: {
       token: ""
     }
   }
