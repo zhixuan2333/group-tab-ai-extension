@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { Check, FolderX, Folders, Loader, X } from "tabler-icons-react"
 
 import { sendToBackground } from "@plasmohq/messaging"
-import { Storage } from "@plasmohq/storage"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import { ProviderConfigs, ProviderType } from "~config"
