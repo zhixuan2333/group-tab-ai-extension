@@ -1,19 +1,20 @@
-import done from "data-base64:~assets/gif/done.gif"
-import time from "data-base64:~assets/gif/time.gif"
-import apikeyImage from "data-base64:~assets/images/api_key.png"
 import type { ReactElement } from "react"
 import { Folders } from "tabler-icons-react"
 
 import { sendToBackground } from "@plasmohq/messaging"
 import { useStorage } from "@plasmohq/storage/hook"
 
+import done from "~assets/gif/done.gif"
+import time from "~assets/gif/time.gif"
+import apikeyImage from "~assets/images/api_key.png"
 import AutoSaveInput from "~components/autoSaveInput"
-import { ProviderConfigs, ProviderType } from "~config"
+import { ProviderConfigs, ProviderType, defaultProviderConfigs } from "~config"
 
 type ImageProps = {
   src: string
   alt: string
   width?: string
+  isCenter?: boolean
 }
 
 const center: React.CSSProperties = {
@@ -23,9 +24,14 @@ const center: React.CSSProperties = {
   width: "100%"
 }
 
-function Image({ src, alt, width = "100px" }: ImageProps): ReactElement {
+function Image({
+  src,
+  alt,
+  width = "100px",
+  isCenter = true
+}: ImageProps): ReactElement {
   return (
-    <div style={center}>
+    <div style={isCenter ? center : null}>
       <img src={src} width={width} alt={alt} />
     </div>
   )
@@ -33,7 +39,8 @@ function Image({ src, alt, width = "100px" }: ImageProps): ReactElement {
 
 function IndexPage() {
   const [config, setConfig] = useStorage<ProviderConfigs | undefined>(
-    "providerConfigs"
+    "providerConfigs",
+    defaultProviderConfigs
   )
 
   return (

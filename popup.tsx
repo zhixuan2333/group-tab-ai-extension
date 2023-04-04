@@ -4,11 +4,12 @@ import { sendToBackground } from "@plasmohq/messaging"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import AutoSaveInput from "~components/autoSaveInput"
-import { ProviderConfigs, ProviderType } from "~config"
+import { ProviderConfigs, ProviderType, defaultProviderConfigs } from "~config"
 
 function IndexPopup() {
   const [config, setConfig] = useStorage<ProviderConfigs | undefined>(
-    "providerConfigs"
+    "providerConfigs",
+    defaultProviderConfigs
   )
 
   return (
