@@ -12,15 +12,16 @@ export async function allTabsPrompt(tabs: chrome.tabs.Tab[]): Promise<string> {
   }
 
   const limtedTabs = tabs.slice(0, 100)
-  const modifiedTabs = limtedTabs.map((tab) => {
-    if (tab.title === "") {
-      return
+  const modifiedTabs: Array<{ id: number | undefined; title: string }> = []
+  for (const tab of limtedTabs) {
+    if (tab.title == null || tab.id == null) {
+      continue
     }
-    return {
+    modifiedTabs.push({
       id: tab.id,
       title: tab.title
-    }
-  })
+    })
+  }
   return `I want you can help me to grounping my tabs. I will give you some titles and id of tabs.
 I want you to group my tabs and the group cannot exceed 5.
 And I want you to only reply the gourp name and ids array with json format, and nothing else.

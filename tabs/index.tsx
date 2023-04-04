@@ -1,4 +1,4 @@
-import type { ReactElement } from "react"
+import type { CSSProperties, ReactElement } from "react"
 import { Folders } from "tabler-icons-react"
 
 import { sendToBackground } from "@plasmohq/messaging"
@@ -8,16 +8,20 @@ import done from "~assets/gif/done.gif"
 import time from "~assets/gif/time.gif"
 import apikeyImage from "~assets/images/api_key.png"
 import AutoSaveInput from "~components/autoSaveInput"
-import { ProviderConfigs, ProviderType, defaultProviderConfigs } from "~config"
+import {
+  type ProviderConfigs,
+  ProviderType,
+  defaultProviderConfigs
+} from "~config"
 
-type ImageProps = {
+interface ImageProps {
   src: string
   alt: string
   width?: string
   isCenter?: boolean
 }
 
-const center: React.CSSProperties = {
+const center: CSSProperties = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
@@ -31,17 +35,27 @@ function Image({
   isCenter = true
 }: ImageProps): ReactElement {
   return (
-    <div style={isCenter ? center : null}>
+    <div style={isCenter ? center : undefined}>
       <img src={src} width={width} alt={alt} />
     </div>
   )
 }
 
-function IndexPage() {
+function IndexPage(): ReactElement {
   const [config, setConfig] = useStorage<ProviderConfigs | undefined>(
     "providerConfigs",
     defaultProviderConfigs
   )
+
+  const saveToken = (token: string): void => {
+    void setConfig((state) => {
+      if (state === undefined) {
+        return defaultProviderConfigs
+      }
+      state.configs.openai.token = token
+      return state
+    })
+  }
 
   return (
     <div
@@ -54,7 +68,7 @@ function IndexPage() {
       }}>
       <h2>👋 Hi there! Thank you for install this auto group tab extension.</h2>
       <p>
-        Let's start <b>Grouping</b> our tabs!
+        Let{"`"}s start <b>Grouping</b> our tabs!
       </p>
       <h3>🟢 | First we need to generate a OpenAI api Token.</h3>
       <p>
@@ -73,28 +87,23 @@ function IndexPage() {
         style={{
           justifyContent: "left"
         }}
-        value={config?.configs[ProviderType.OpenAI]?.token || ""}
-        onChange={(value) => {
-          setConfig((state) => ({
-            ...state,
-            configs: {
-              ...state?.configs,
-              [ProviderType.OpenAI]: { token: value }
-            }
-          }))
-        }}
+        value={config?.configs[ProviderType.OpenAI]?.token ?? ""}
+        onChange={saveToken}
       />
 
       <h3>🟢 | Now we can start grouping our tabs.</h3>
       <p>
         Click on the extension icon and click this button.{" "}
-        <button onClick={() => sendToBackground({ name: "groupAllTabs" })}>
+        <button
+          onClick={() => {
+            void sendToBackground({ name: "groupAllTabs" })
+          }}>
           <Folders size={20} />
         </button>{" "}
         The extension will group your tabs based on the title. And <b>Wait</b>.
       </p>
       <Image src={time} alt="time" width="400px" />
-      <h3>🟢 | At last let's set a shortcut for it.</h3>
+      <h3>🟢 | At last let{"`"}s set a shortcut for it.</h3>
       <p>
         <code style={{ color: "blue" }}>chrome://extensions/shortcuts</code> Go
         to here to setup a shortcut for <b>Grouping</b>. For example:{" "}

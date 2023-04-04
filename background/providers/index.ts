@@ -1,10 +1,10 @@
 import type { Provider } from "~background/types"
-import { ProviderConfigs, ProviderType, getProviderConfigs } from "~config"
+import { type ProviderConfigs, ProviderType, getProviderConfigs } from "~config"
 
 import { OpenAIProvider } from "./openai"
 
 export async function getProvider(): Promise<Provider> {
-  let config: ProviderConfigs = await getProviderConfigs()
+  const config: ProviderConfigs = await getProviderConfigs()
   switch (config.provider) {
     case ProviderType.Local:
     case ProviderType.OpenAI:

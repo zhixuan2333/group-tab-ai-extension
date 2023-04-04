@@ -1,7 +1,7 @@
 import type { Provider } from "~background/types"
 
 export class OpenAIProvider implements Provider {
-  private token: string
+  private readonly token: string
   constructor(token: string) {
     this.token = token
   }

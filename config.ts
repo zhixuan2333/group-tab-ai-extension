@@ -20,17 +20,13 @@ export interface OpenAIProviderConfig {
 export interface ProviderConfigs {
   provider: ProviderType
   configs: {
-    [ProviderType.Local]: LocalProviderConfig | null
-    [ProviderType.OpenAI]: OpenAIProviderConfig | null
+    [ProviderType.OpenAI]: OpenAIProviderConfig
   }
 }
 
 export const defaultProviderConfigs: ProviderConfigs = {
   provider: ProviderType.Local,
   configs: {
-    local: {
-      url: ""
-    },
     openai: {
       token: ""
     }

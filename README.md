@@ -1,33 +1,41 @@
-This is a [Plasmo extension](https://docs.plasmo.com/) project bootstrapped with [`plasmo init`](https://www.npmjs.com/package/plasmo).
+# Group Tab AI extension
 
-## Getting Started
+Group Tab AI is a browser extension that uses advanced AI technology powered by ChatGPT to group your browser tabs into logical categories. With Group Tab AI, you can easily organize your tabs based on topics, projects, or any other criteria you choose, making it easier to find the information you need and stay focused on your tasks.
 
-First, run the development server:
+## Installation
+
+To install Group Tab AI, follow these steps:
+
+1. Download the latest release.
+2. Unzip the downloaded file to a folder on your computer.
+3. Open your web browser and navigate to the extensions page.
+4. Enable developer mode by toggling the switch in the top right corner of the page.
+5. Click the "Load unpacked" button and select the folder where you unzipped the extension files.
+
+## Development
+
+To develop Group Tab AI, you'll need to have `Node.js` and `PNPM` installed on your computer. Follow these steps to get started:
 
 ```bash
+git clone #TODO
+cd #TODO
+pnpm install
+
+# To start development server
 pnpm dev
-# or
-npm run dev
-```
+# For edge
+pnpm dev:edge
 
-Open your browser and load the appropriate development build. For example, if you are developing for the chrome browser, using manifest v3, use: `build/chrome-mv3-dev`.
-
-You can start editing the popup by modifying `popup.tsx`. It should auto-update as you make changes. To add an options page, simply add a `options.tsx` file to the root of the project, with a react component default exported. Likewise to add a content page, add a `content.ts` file to the root of the project, importing some module and do some logic, then reload the extension on your browser.
-
-For further guidance, [visit our Documentation](https://docs.plasmo.com/)
-
-## Making production build
-
-Run the following:
-
-```bash
+# To build extension
 pnpm build
-# or
-npm run build
 ```
 
-This should create a production bundle for your extension, ready to be zipped and published to the stores.
+Open your browser and load the appropriate development build. For example, if you are developing for the chrome browser, using manifest v3, use: `build/chrome-mv3-dev`. If you are developing for the edge browser, using manifest v2, use: `build/edge-mv2-dev`.
 
-## Submit to the webstores
+## Contributing
 
-The easiest way to deploy your Plasmo extension is to use the built-in [bpp](https://bpp.browser.market) GitHub action. Prior to using this action however, make sure to build your extension and upload the first version to the store to establish the basic credentials. Then, simply follow [this setup instruction](https://docs.plasmo.com/framework/workflows/submit) and you should be on your way for automated submission!
+Contributions to Group Tab AI are always welcome!
+
+## License
+
+Group Tab AI is licensed under the [GPL-3.0 license](LICENSE).

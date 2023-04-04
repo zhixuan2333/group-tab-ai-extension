@@ -1,21 +1,30 @@
-import { useEffect, useState } from "react"
+import {
+  type CSSProperties,
+  type ReactElement,
+  useEffect,
+  useState
+} from "react"
 import { Check, Loader, X } from "tabler-icons-react"
 
 import rotating from "./autoSaveInput.module.css"
 
-type Props = {
+interface Props {
   value: string
   onChange: (value: string) => void
-  style?: React.CSSProperties
+  style?: CSSProperties
 }
 
-export default function AutoSaveInput({ value, onChange, style }: Props) {
+export default function AutoSaveInput({
+  value,
+  onChange,
+  style
+}: Props): ReactElement {
   const [data, setData] = useState("")
   // -1 = Empty, 0 = loading, 1 = success
   const [isSaved, setIsSaved] = useState(0)
 
   useEffect(() => {
-    if (value) {
+    if (value.length > 0) {
       setIsSaved(1)
     } else {
       setIsSaved(-1)
@@ -33,7 +42,9 @@ export default function AutoSaveInput({ value, onChange, style }: Props) {
       setIsSaved(1)
     }, 2 * 1000)
 
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+    }
   }, [data])
   return (
     <div
@@ -46,7 +57,9 @@ export default function AutoSaveInput({ value, onChange, style }: Props) {
         ...style
       }}>
       <input
-        onChange={(e) => setData(e.target.value)}
+        onChange={(e) => {
+          setData(e.target.value)
+        }}
         value={data}
         placeholder="sk-xxxxx"
         type="password"

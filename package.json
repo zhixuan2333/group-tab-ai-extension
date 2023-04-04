@@ -1,8 +1,8 @@
 {
-  "name": "auto-group-tag-extension",
-  "displayName": "Auto group tag",
+  "name": "group-tab-ai-extension",
+  "displayName": "Group Tab AI extension",
   "version": "1.0.0",
-  "description": "A extension can auto gourping with AI",
+  "description": "Is a browser extension that uses advanced AI technology powered by ChatGPT to group your browser tabs into logical categories.",
   "author": "zhixuan2333",
   "scripts": {
     "dev": "plasmo dev",
@@ -10,7 +10,8 @@
     "build": "plasmo build",
     "build:edge": "plasmo build --target=edge-mv3",
     "debug": "plasmo dev --verbose",
-    "package": "plasmo package"
+    "package": "plasmo package",
+    "lint": "eslint --ext .ts,.tsx,.js,.jsx ."
   },
   "dependencies": {
     "@plasmohq/messaging": "^0.1.7",
@@ -26,6 +27,14 @@
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "eslint": "^8.37.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-standard-with-typescript": "^34.0.1",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-react": "^7.32.2",
     "prettier": "2.8.3",
     "typescript": "4.9.4"
   },
