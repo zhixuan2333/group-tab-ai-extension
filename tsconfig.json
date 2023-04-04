@@ -16,5 +16,6 @@
     },
     "baseUrl": ".",
     "strictNullChecks": true,
+    "ignoreDeprecations": "5.0"
   }
 }
