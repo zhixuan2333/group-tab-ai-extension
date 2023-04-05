@@ -50,7 +50,7 @@
       }
     ],
     "host_permissions": [
-      "https://*/*"
+      "https://api.openai.com/*/*"
     ],
     "permissions": [
       "tabs",
