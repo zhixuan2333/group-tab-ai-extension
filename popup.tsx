@@ -6,11 +6,16 @@ import { useStorage } from "@plasmohq/storage/hook"
 
 import AutoSaveInput from "~components/autoSaveInput"
 import { type ProviderConfigs, defaultProviderConfigs } from "~config"
+import { type Settings, defaultSettings } from "~setting"
 
 function IndexPopup(): ReactElement {
   const [config, setConfig] = useStorage<ProviderConfigs>(
     "providerConfigs",
     defaultProviderConfigs
+  )
+  const [settings, setSettings] = useStorage<Settings>(
+    "settings",
+    defaultSettings
   )
 
   const saveToken = (token: string): void => {
@@ -37,6 +42,21 @@ function IndexPopup(): ReactElement {
         value={config?.configs?.openai?.token ?? ""}
         onChange={saveToken}
       />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center"
+        }}>
+        <input
+          type="checkbox"
+          checked={settings?.showName}
+          onChange={() => {
+            void setSettings({ showName: !settings.showName })
+          }}
+        />
+        <label>Show name</label>
+      </div>
       <div
         style={{
           display: "flex",

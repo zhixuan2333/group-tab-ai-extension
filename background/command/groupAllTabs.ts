@@ -1,12 +1,16 @@
 import { allTabsPrompt } from "~background/prompts"
 import { getProvider } from "~background/providers"
+import { getSettings } from "~setting"
 
 export async function groupAllTabs(windowID?: number): Promise<void> {
+  const setting = getSettings()
+
   // The GPT response is take many time to response,
   // The last windows maybe change to another windows
   // So we need to get the current window id
   let windowId: number = 0
   if (windowID !== undefined) {
+    // On popup menu, It will pass the in correct window id
     windowId = windowID
   } else {
     const window = await chrome.windows.getCurrent()
@@ -15,11 +19,22 @@ export async function groupAllTabs(windowID?: number): Promise<void> {
     }
     windowId = window.id
   }
+
+  // Get all tabs in the current window
   const tabs = await chrome.tabs.query({ windowId })
+  const tabIDs: number[] = []
+  for (const tab of tabs) {
+    if (tab.id === undefined) {
+      continue
+    }
+    tabIDs.push(tab.id)
+  }
+  void chrome.tabs.ungroup(tabIDs)
+  console.log("ungrouping all tabs")
 
   const prompts = allTabsPrompt(tabs)
-  const provider = await getProvider()
-  const response = await provider.generate(await prompts)
+  const provider = getProvider()
+  const response = await (await provider).generate(await prompts)
 
   let resp: Group[] = []
   try {
@@ -30,26 +45,15 @@ export async function groupAllTabs(windowID?: number): Promise<void> {
   }
   console.log(resp)
 
-  await grounpTabs(resp, windowId)
+  await grounpTabs(resp, windowId, (await setting).showName)
 }
 
 async function grounpTabs(
   data: Group[],
-  windowId: number = chrome.windows.WINDOW_ID_CURRENT
+  windowId: number = chrome.windows.WINDOW_ID_CURRENT,
+  showName: boolean = true
 ): Promise<void> {
-  console.log("ungrouping all tabs")
-
-  const unGroupTabs = await chrome.tabs.query({
-    windowId,
-    groupId: chrome.tabGroups.TAB_GROUP_ID_NONE
-  })
-
-  for (const tab of unGroupTabs) {
-    if (tab.id === undefined) {
-      return
-    }
-    await chrome.tabs.ungroup(tab.id)
-  }
+  // Get all tabs in the current window
   const tabs = await chrome.tabs.query({ windowId })
   for (const group of data) {
     // At some time, they are return empty group name and like "other", "others", "miscellaneous".
@@ -62,7 +66,7 @@ async function grounpTabs(
       case "others":
       case "Miscellaneous":
       case "miscellaneous":
-        return
+        continue
       default:
         break
     }
@@ -85,7 +89,7 @@ async function grounpTabs(
       }
     })
     const a = await chrome.tabGroups.update(await g, {
-      title: "🤖 | " + group.group_name,
+      title: showName ? "🤖 | " + group.group_name : "🤖",
       collapsed: true
     })
     console.log("Grouped ", a.title)
@@ -100,7 +104,7 @@ async function grounpTabs(
 
   for (const tab of nonGroupTabs) {
     if (tab.id === undefined) {
-      return
+      continue
     }
     await chrome.tabs.move(tab.id, { index: -1 })
   }
