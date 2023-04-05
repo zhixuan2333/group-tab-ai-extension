@@ -1,5 +1,7 @@
 # Group Tab AI extension
 
+<img src="./assets/icon.png" width="32">
+
 Group Tab AI is a browser extension that uses advanced AI technology powered by ChatGPT to group your browser tabs into logical categories. With Group Tab AI, you can easily organize your tabs based on topics, projects, or any other criteria you choose, making it easier to find the information you need and stay focused on your tasks.
 
 ## Installation
@@ -17,8 +19,8 @@ To install Group Tab AI, follow these steps:
 To develop Group Tab AI, you'll need to have `Node.js` and `PNPM` installed on your computer. Follow these steps to get started:
 
 ```bash
-git clone #TODO
-cd #TODO
+git clone https://github.com/zhixuan2333/group-tab-ai-extension.git
+cd group-tab-ai-extension
 pnpm install
 
 # To start development server
@@ -28,6 +30,8 @@ pnpm dev:edge
 
 # To build extension
 pnpm build
+# For edge
+pnpm build:edge
 ```
 
 Open your browser and load the appropriate development build. For example, if you are developing for the chrome browser, using manifest v3, use: `build/chrome-mv3-dev`. If you are developing for the edge browser, using manifest v2, use: `build/edge-mv2-dev`.
