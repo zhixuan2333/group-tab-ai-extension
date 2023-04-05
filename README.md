@@ -8,7 +8,7 @@ Group Tab AI is a browser extension that uses advanced AI technology powered by 
 
 To install Group Tab AI, follow these steps:
 
-1. Download the latest release.
+1. Download the [latest release](https://github.com/zhixuan2333/group-tab-ai-extension/releases/latest).
 2. Unzip the downloaded file to a folder on your computer.
 3. Open your web browser and navigate to the extensions page.
 4. Enable developer mode by toggling the switch in the top right corner of the page.
