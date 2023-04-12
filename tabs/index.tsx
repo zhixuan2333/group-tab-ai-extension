@@ -42,20 +42,10 @@ function Image({
 }
 
 function IndexPage(): ReactElement {
-  const [config, setConfig] = useStorage<ProviderConfigs | undefined>(
+  const [config, setConfig] = useStorage<ProviderConfigs>(
     "providerConfigs",
     defaultProviderConfigs
   )
-
-  const saveToken = (token: string): void => {
-    void setConfig((state) => {
-      if (state === undefined) {
-        return defaultProviderConfigs
-      }
-      state.configs.openai.token = token
-      return state
-    })
-  }
 
   return (
     <div
@@ -88,7 +78,18 @@ function IndexPage(): ReactElement {
           justifyContent: "left"
         }}
         value={config?.configs[ProviderType.OpenAI]?.token ?? ""}
-        onChange={saveToken}
+        onChange={(token) => {
+          void setConfig({
+            ...config,
+            configs: {
+              ...config.configs,
+              openai: {
+                ...config.configs.openai,
+                token
+              }
+            }
+          })
+        }}
       />
 
       <h3>🟢 | Now we can start grouping our tabs.</h3>
