@@ -6,10 +6,12 @@ const storage = new Storage({
 
 export interface Settings {
   showName: boolean
+  autoGroup: boolean
 }
 
 export const defaultSettings: Settings = {
-  showName: true
+  showName: true,
+  autoGroup: true
 }
 
 export async function getSettings(): Promise<Settings> {

@@ -18,16 +18,6 @@ function IndexPopup(): ReactElement {
     defaultSettings
   )
 
-  const saveToken = (token: string): void => {
-    void setConfig((state) => {
-      if (state === undefined) {
-        return defaultProviderConfigs
-      }
-      state.configs.openai.token = token
-      return state
-    })
-  }
-
   return (
     <div
       style={{
@@ -40,7 +30,18 @@ function IndexPopup(): ReactElement {
       <h2>Type your openAI token here.</h2>
       <AutoSaveInput
         value={config?.configs?.openai?.token ?? ""}
-        onChange={saveToken}
+        onChange={(token) => {
+          void setConfig({
+            ...config,
+            configs: {
+              ...config.configs,
+              openai: {
+                ...config.configs.openai,
+                token
+              }
+            }
+          })
+        }}
       />
       <div
         style={{
@@ -52,10 +53,31 @@ function IndexPopup(): ReactElement {
           type="checkbox"
           checked={settings?.showName}
           onChange={() => {
-            void setSettings({ showName: !settings.showName })
+            void setSettings({
+              ...settings,
+              showName: !settings.showName
+            })
           }}
         />
         <label>Show name</label>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center"
+        }}>
+        <input
+          type="checkbox"
+          checked={settings?.autoGroup}
+          onChange={() => {
+            void setSettings({
+              ...settings,
+              autoGroup: !settings.autoGroup
+            })
+          }}
+        />
+        <label>Auto Group</label>
       </div>
       <div
         style={{
