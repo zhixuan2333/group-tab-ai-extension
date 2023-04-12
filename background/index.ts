@@ -1,4 +1,4 @@
-import { getSettings } from "~setting"
+import { getSettings } from "~storage/setting"
 
 import { groupAllTabs } from "./command/groupAllTabs"
 import { unGroupAllTabs } from "./command/unGroupAllTabs"

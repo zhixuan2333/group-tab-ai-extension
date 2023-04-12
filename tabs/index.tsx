@@ -12,7 +12,7 @@ import {
   type ProviderConfigs,
   ProviderType,
   defaultProviderConfigs
-} from "~config"
+} from "~storage/config"
 
 interface ImageProps {
   src: string

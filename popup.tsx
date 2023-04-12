@@ -5,8 +5,8 @@ import { sendToBackground } from "@plasmohq/messaging"
 import { useStorage } from "@plasmohq/storage/hook"
 
 import AutoSaveInput from "~components/autoSaveInput"
-import { type ProviderConfigs, defaultProviderConfigs } from "~config"
-import { type Settings, defaultSettings } from "~setting"
+import { type ProviderConfigs, defaultProviderConfigs } from "~storage/config"
+import { type Settings, defaultSettings } from "~storage/setting"
 
 function IndexPopup(): ReactElement {
   const [config, setConfig] = useStorage<ProviderConfigs>(
@@ -88,13 +88,29 @@ function IndexPopup(): ReactElement {
         }}>
         <button
           onClick={() => {
-            void sendToBackground({ name: "groupAllTabs" })
+            void (async () => {
+              const window = await chrome.windows.getCurrent()
+              if (window.id == null) return
+              void sendToBackground({
+                name: "groupAllTabs",
+                body: {
+                  windowId: window.id
+                }
+              })
+            })()
           }}>
           <Folders size={20} />
         </button>
         <button
           onClick={() => {
-            void sendToBackground({ name: "unGroupAllTabs" })
+            void (async () => {
+              const window = await chrome.windows.getCurrent()
+              if (window.id == null) return
+              void sendToBackground({
+                name: "unGroupAllTabs",
+                body: { windowId: window.id }
+              })
+            })()
           }}>
           <FolderX size={20} />
         </button>

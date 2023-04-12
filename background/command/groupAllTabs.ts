@@ -1,6 +1,6 @@
 import { allTabsPrompt } from "~background/prompts"
 import { getProvider } from "~background/providers"
-import { getSettings } from "~setting"
+import { getSettings } from "~storage/setting"
 
 export async function groupAllTabs(windowID?: number): Promise<void> {
   const setting = getSettings()
@@ -34,18 +34,32 @@ export async function groupAllTabs(windowID?: number): Promise<void> {
 
   const prompts = allTabsPrompt(tabs)
   const provider = getProvider()
-  const response = await (await provider).generate(await prompts)
+
+  // Set badge text to show the time
+  const startTime = new Date().getTime()
+  const timer = setInterval(() => {
+    const now = new Date().getTime()
+    const diff = Math.floor((now - startTime) / 1000).toString()
+    void chrome.action.setBadgeText({ text: diff })
+  }, 1000)
 
   let resp: Group[] = []
   try {
+    const response = await (await provider).generate(await prompts)
     resp = await JSON.parse(response)
   } catch (error) {
     console.log(error)
+    clearInterval(timer)
+    void chrome.action.setBadgeText({ text: "Err" })
     return
   }
   console.log(resp)
 
   await grounpTabs(resp, windowId, (await setting).showName)
+
+  // Clear badge text
+  clearInterval(timer)
+  void chrome.action.setBadgeText({ text: "" })
 }
 
 async function grounpTabs(

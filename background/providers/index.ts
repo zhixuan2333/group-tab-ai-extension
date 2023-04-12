@@ -1,5 +1,9 @@
 import type { Provider } from "~background/types"
-import { type ProviderConfigs, ProviderType, getProviderConfigs } from "~config"
+import {
+  type ProviderConfigs,
+  ProviderType,
+  getProviderConfigs
+} from "~storage/config"
 
 import { OpenAIProvider } from "./openai"
 
