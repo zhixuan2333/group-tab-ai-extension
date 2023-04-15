@@ -1,7 +1,7 @@
 {
   "name": "group-tab-ai-extension",
   "displayName": "Group Tab AI extension",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Is a browser extension that uses advanced AI technology powered by ChatGPT to group your browser tabs into logical categories.",
   "author": "zhixuan2333",
   "scripts": {
