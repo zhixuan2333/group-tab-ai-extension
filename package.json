@@ -5,13 +5,13 @@
   "description": "Is a browser extension that uses advanced AI technology powered by ChatGPT to group your browser tabs into logical categories.",
   "author": "zhixuan2333",
   "scripts": {
-    "dev": "plasmo dev",
-    "dev:edge": "plasmo dev --target=edge-mv3",
-    "build": "plasmo build",
-    "build:edge": "plasmo build --target=edge-mv3",
+    "dev": "sh ./script/version.sh && plasmo dev",
+    "dev:edge": "pnpm dev --target=edge-mv3",
+    "build": "sh ./script/version.sh && plasmo build",
+    "build:edge": "pnpm build --target=edge-mv3",
     "debug": "plasmo dev --verbose",
     "package": "plasmo package",
-    "package:edge": "plasmo package --target=edge-mv3",
+    "package:edge": "pnpm package --target=edge-mv3",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx ."
   },
   "dependencies": {

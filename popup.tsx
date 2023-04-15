@@ -7,6 +7,7 @@ import { useStorage } from "@plasmohq/storage/hook"
 import AutoSaveInput from "~components/autoSaveInput"
 import { type ProviderConfigs, defaultProviderConfigs } from "~storage/config"
 import { type Settings, defaultSettings } from "~storage/setting"
+import { shortHash, version } from "~version"
 
 function IndexPopup(): ReactElement {
   const [config, setConfig] = useStorage<ProviderConfigs>(
@@ -121,6 +122,9 @@ function IndexPopup(): ReactElement {
         rel="noreferrer">
         Did you need halp?
       </a>
+      <span>
+        {version} | {shortHash}
+      </span>
     </div>
   )
 }
