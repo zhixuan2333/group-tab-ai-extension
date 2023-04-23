@@ -9,9 +9,7 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   // If popup menu is open, service worker can't get the current window id
   // So we need to pass the window id from popup menu
   await groupAllTabs(req.body.windowId)
-  res.send({
-    success: true
-  })
+  res.send({ success: true })
 }
 
 export default handler
