@@ -8,5 +8,3 @@ echo "export const version = '$version';" > version.ts
 echo "export const shortHash = '$(git rev-parse --short HEAD)';" >> version.ts
 
 echo "$version"
-
-

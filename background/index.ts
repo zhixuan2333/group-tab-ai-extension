@@ -39,16 +39,40 @@ chrome.tabs.onCreated.addListener((tab) => {
   void (async (tab): Promise<void> => {
     const setting = await getSettings()
     if (setting.autoGroup) {
-      const tabs = await chrome.tabs.query({
-        windowId: tab.windowId,
-        groupId: chrome.tabGroups.TAB_GROUP_ID_NONE
-      })
-      const grounp = await chrome.tabGroups.query({
-        windowId: tab.windowId
-      })
-      if (tabs.length > 10 && grounp.length === 0) {
-        void groupAllTabs()
+      if (tab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
+        return
+      }
+      // Find the windowId in unGroupTabLengths
+      let index = unGroupTabLengths.findIndex(
+        (item) => item.windowId === tab.windowId
+      )
+      if (index === -1) {
+        const tabs = chrome.tabs.query({ windowId: tab.windowId })
+        const grounp = chrome.tabGroups.query({ windowId: tab.windowId })
+        index =
+          unGroupTabLengths.push({
+            windowId: tab.windowId,
+            length: (await tabs).length,
+            hasGroup: (await grounp).length > 0
+          }) - 1
+      } else {
+        unGroupTabLengths[index].length++
+      }
+      if (
+        unGroupTabLengths[index].length > 10 &&
+        !unGroupTabLengths[index].hasGroup
+      ) {
+        const isSuccess = groupAllTabs()
+        unGroupTabLengths[index].hasGroup = await isSuccess
       }
     }
   })(tab)
 })
+
+interface unGroupTabLength {
+  windowId: number
+  length: number
+  hasGroup: boolean
+}
+
+const unGroupTabLengths: unGroupTabLength[] = []

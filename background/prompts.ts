@@ -25,6 +25,7 @@ export async function allTabsPrompt(tabs: chrome.tabs.Tab[]): Promise<string> {
   return `I want you can help me to grounping my tabs. I will give you some titles and id of tabs.
 I want you to group my tabs and the group cannot exceed 5.
 And I want you to only reply the gourp name and ids array with json format, and nothing else.
+The gourp name is as short as possible.
 The Format is [{group_name: string, ids: number[]}]
 Do not write explanations. Do not type other word.
 My url list is ${JSON.stringify(modifiedTabs)}`

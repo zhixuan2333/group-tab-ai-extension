@@ -2,22 +2,15 @@ import { allTabsPrompt } from "~background/prompts"
 import { getProvider } from "~background/providers"
 import { getSettings } from "~storage/setting"
 
-export async function groupAllTabs(windowID?: number): Promise<void> {
+export async function groupAllTabs(windowID?: number): Promise<boolean> {
   const setting = getSettings()
 
   // The GPT response is take many time to response,
   // The last windows maybe change to another windows
   // So we need to get the current window id
-  let windowId: number = 0
-  if (windowID !== undefined) {
-    // On popup menu, It will pass the in correct window id
-    windowId = windowID
-  } else {
-    const window = await chrome.windows.getCurrent()
-    if (window.id === undefined) {
-      return
-    }
-    windowId = window.id
+  const windowId = windowID ?? (await chrome.windows.getCurrent()).id
+  if (windowId === undefined) {
+    return false
   }
 
   // Get all tabs in the current window
@@ -51,7 +44,7 @@ export async function groupAllTabs(windowID?: number): Promise<void> {
     console.log(error)
     clearInterval(timer)
     void chrome.action.setBadgeText({ text: "Err" })
-    return
+    return false
   }
   console.log(resp)
 
@@ -60,6 +53,7 @@ export async function groupAllTabs(windowID?: number): Promise<void> {
   // Clear badge text
   clearInterval(timer)
   void chrome.action.setBadgeText({ text: "" })
+  return true
 }
 
 async function grounpTabs(
