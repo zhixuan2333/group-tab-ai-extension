@@ -30,6 +30,11 @@ export class OpenAIProvider implements Provider {
     const json: ChatCompletion = await rep.json()
     return json.choices[0].message.content
   }
+
+  async generateWithFormat<T>(prompt: string): Promise<T> {
+    const resp = await this.generate(prompt)
+    return JSON.parse(resp)
+  }
 }
 
 interface ChatCompletion {
