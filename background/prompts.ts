@@ -30,9 +30,6 @@ export async function autoGroupPrompt(
   if (tabs.length === 0) {
     throw new Error("tabs is empty")
   }
-  if (grounps.length === 0) {
-    throw new Error("grounps is empty")
-  }
   const limtedTabs = tabs.slice(0, 100)
   const modifiedTabs: Array<{
     id: number
