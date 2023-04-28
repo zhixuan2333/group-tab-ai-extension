@@ -116,8 +116,7 @@ async function groupTabs(
     })
 
     const a = await chrome.tabGroups.update(await g, {
-      title: showName ? "🤖 | " + group.group_name : "🤖",
-      collapsed: true
+      title: showName ? "🤖 | " + group.group_name : "🤖"
     })
     console.log("Grouped ", a.title)
   }
