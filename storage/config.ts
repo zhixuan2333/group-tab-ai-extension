@@ -37,6 +37,7 @@ export async function getProviderConfigs(): Promise<ProviderConfigs> {
   const providerConfigs = await storage.get<ProviderConfigs>("providerConfigs")
   if (providerConfigs === undefined) {
     console.log("config not found, use default config")
+    void setProviderConfigs(defaultProviderConfigs)
     return defaultProviderConfigs
   }
   return providerConfigs

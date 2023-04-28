@@ -1,5 +1,6 @@
 import { getSettings } from "~storage/setting"
 
+import { autoGroup } from "./command/autoGroup"
 import { groupAllTabs } from "./command/groupAllTabs"
 import { unGroupAllTabs } from "./command/unGroupAllTabs"
 
@@ -36,43 +37,20 @@ chrome.runtime.onInstalled.addListener((e) => {
 // Add listener for tab created
 // If setting is auto group, group all tabs
 chrome.tabs.onCreated.addListener((tab) => {
+  tabHandler(tab)
+})
+
+chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
+  if (changeInfo.status === "complete") {
+    tabHandler(tab)
+  }
+})
+
+function tabHandler(tab: chrome.tabs.Tab): void {
   void (async (tab): Promise<void> => {
     const setting = await getSettings()
     if (setting.autoGroup) {
-      if (tab.groupId !== chrome.tabGroups.TAB_GROUP_ID_NONE) {
-        return
-      }
-      // Find the windowId in unGroupTabLengths
-      let index = unGroupTabLengths.findIndex(
-        (item) => item.windowId === tab.windowId
-      )
-      if (index === -1) {
-        const tabs = chrome.tabs.query({ windowId: tab.windowId })
-        const grounp = chrome.tabGroups.query({ windowId: tab.windowId })
-        index =
-          unGroupTabLengths.push({
-            windowId: tab.windowId,
-            length: (await tabs).length,
-            hasGroup: (await grounp).length > 0
-          }) - 1
-      } else {
-        unGroupTabLengths[index].length++
-      }
-      if (
-        unGroupTabLengths[index].length > 10 &&
-        !unGroupTabLengths[index].hasGroup
-      ) {
-        const isSuccess = groupAllTabs()
-        unGroupTabLengths[index].hasGroup = await isSuccess
-      }
+      autoGroup(tab)
     }
   })(tab)
-})
-
-interface unGroupTabLength {
-  windowId: number
-  length: number
-  hasGroup: boolean
 }
-
-const unGroupTabLengths: unGroupTabLength[] = []

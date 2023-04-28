@@ -18,6 +18,7 @@ export async function getSettings(): Promise<Settings> {
   const settings = await storage.get<Settings>("settings")
   if (settings === undefined) {
     console.log("settings not found, use default settings")
+    void setSettings(defaultSettings)
     return defaultSettings
   }
   return settings
