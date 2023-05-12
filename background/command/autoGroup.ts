@@ -75,6 +75,8 @@ async function groupTabs(
   windowId: number = chrome.windows.WINDOW_ID_CURRENT,
   showName: boolean = true
 ): Promise<void> {
+  // Get all groups in the current window
+  const groups = chrome.tabGroups.query({ windowId })
   // Get all tabs in the current window
   const tabs = await chrome.tabs.query({ windowId })
   for (const group of data) {
@@ -104,9 +106,12 @@ async function groupTabs(
       continue
     }
 
+    // If the group is already exist, we don't need to create it
+    const existGroup = (await groups).find((g) => g.id === group.group_id)
+
     const g = chrome.tabs.group({
       tabIds: ids,
-      groupId: group.group_id === -1 ? undefined : group.group_id,
+      groupId: existGroup !== undefined ? group.group_id : undefined,
       createProperties:
         group.group_id === -1
           ? {
