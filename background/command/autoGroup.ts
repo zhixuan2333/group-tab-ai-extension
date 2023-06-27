@@ -49,7 +49,7 @@ export function autoGroup(tab: chrome.tabs.Tab): void {
 }
 
 async function push(windowId: number): Promise<void> {
-  const tabs = chrome.tabs.query({ windowId })
+  const tabs = chrome.tabs.query({ windowId, pinned: false })
   const groups = chrome.tabGroups.query({ windowId })
   const provider = getProvider()
   const prompt = autoGroupPrompt(await tabs, await groups)
