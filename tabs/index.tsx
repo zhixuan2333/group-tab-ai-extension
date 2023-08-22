@@ -63,7 +63,7 @@ function IndexPage(): ReactElement {
       <h3>🟢 | First we need to generate a OpenAI api Token.</h3>
       <p>
         <a
-          href="https://platform.openai.com/overview"
+          href="https://platform.openai.com/account/api-keys"
           target="_blank"
           rel="noreferrer">
           Click here
