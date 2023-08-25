@@ -26,7 +26,8 @@ function IndexPopup(): ReactElement {
         flexDirection: "column",
         padding: 16,
         paddingTop: 8,
-        gap: 2
+        gap: 2,
+        minWidth: 200
       }}>
       <h2>Type your openAI token here.</h2>
       <AutoSaveInput
