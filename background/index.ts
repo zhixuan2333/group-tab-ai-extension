@@ -48,9 +48,14 @@ chrome.tabs.onUpdated.addListener((_tabId, changeInfo, tab) => {
 
 function tabHandler(tab: chrome.tabs.Tab): void {
   void (async (tab): Promise<void> => {
+    console.log(`[AutoGroup] tabHandler triggered for tab ID: ${tab.id ?? 'N/A'}, URL: ${tab.url ?? 'N/A'}`);
     const setting = await getSettings()
+    console.log(`[AutoGroup] Fetched settings. autoGroup is: ${String(setting.autoGroup)}`);
     if (setting.autoGroup) {
+      console.log(`[AutoGroup] Calling autoGroup function for tab ID: ${tab.id ?? 'N/A'}`);
       autoGroup(tab)
+    } else {
+      console.log(`[AutoGroup] autoGroup setting is false. Skipping autoGroup function.`);
     }
   })(tab)
 }

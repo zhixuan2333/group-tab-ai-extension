@@ -7,11 +7,17 @@ const storage = new Storage({
 export interface Settings {
   showName: boolean
   autoGroup: boolean
+  specialRequirements: string
+  keepMiscTab: boolean
+  keepExistingGroups: boolean
 }
 
 export const defaultSettings: Settings = {
   showName: true,
-  autoGroup: true
+  autoGroup: true,
+  specialRequirements: "",
+  keepMiscTab: false,
+  keepExistingGroups: false
 }
 
 export async function getSettings(): Promise<Settings> {

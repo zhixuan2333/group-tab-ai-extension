@@ -1,7 +1,4 @@
-import { Badge } from "~background/badge"
-import { autoGroupPrompt } from "~background/prompts"
-import { getProvider } from "~background/providers"
-import { getSettings } from "~storage/setting"
+import { groupAllTabs } from "./groupAllTabs"
 
 let isRunning: boolean = false
 
@@ -13,15 +10,17 @@ interface windowLastUpdate {
 const windowLastUpdates: windowLastUpdate[] = []
 
 export function autoGroup(tab: chrome.tabs.Tab): void {
+  console.log(`[AutoGroup] autoGroup function entered for tab ID: ${tab.id ?? 'N/A'}`);
   if (tab.id === undefined) {
+    console.log(`[AutoGroup] Tab ID is undefined. Returning.`);
     return
   }
 
-  // Get index of windowLastUpdates
   let index = windowLastUpdates.findIndex(
     (item) => item.windowId === tab.windowId
   )
   if (index === -1) {
+    console.log(`[AutoGroup] First event for window ID: ${tab.windowId}. Initializing count.`);
     index =
       windowLastUpdates.push({
         windowId: tab.windowId,
@@ -29,121 +28,36 @@ export function autoGroup(tab: chrome.tabs.Tab): void {
       }) - 1
   }
 
-  // Update eventCount
   windowLastUpdates[index].eventCount++
   console.log(
-    windowLastUpdates[index].windowId,
-    ":",
-    windowLastUpdates[index].eventCount
+    `[AutoGroup] Window ID: ${windowLastUpdates[index].windowId}, New Event Count: ${windowLastUpdates[index].eventCount}`
   )
 
   if (isRunning) {
+    console.log(`[AutoGroup] A group process is already running. Returning.`);
     return
   }
 
   if (windowLastUpdates[index].eventCount >= 20) {
+    console.log(`[AutoGroup] Event count threshold (>=20) reached for window ID: ${windowLastUpdates[index].windowId}. Triggering full regroup via groupAllTabs.`);
     isRunning = true
-    windowLastUpdates[index].eventCount = 0
+    console.log(`[AutoGroup] Reset event count for window ID: ${windowLastUpdates[index].windowId} to 0.`);
     void push(windowLastUpdates[index].windowId)
+    windowLastUpdates[index].eventCount = 0
+  } else {
+    console.log(`[AutoGroup] Event count ${windowLastUpdates[index].eventCount} is less than 20 for window ID: ${windowLastUpdates[index].windowId}. Not triggering.`);
   }
 }
 
 async function push(windowId: number): Promise<void> {
-  const tabs = chrome.tabs.query({ windowId, pinned: false })
-  const groups = chrome.tabGroups.query({ windowId })
-  const provider = getProvider()
-  const prompt = autoGroupPrompt(await tabs, await groups)
-  const setting = getSettings()
-  const timer = new Badge()
-  timer.start()
-
+  console.log(`[AutoGroup] push: Triggering groupAllTabs for window ID: ${windowId}.`);
   try {
-    const response: Group[] = await (
-      await provider
-    ).generateWithFormat(await prompt)
-    await groupTabs(response, windowId, (await setting).showName)
-    timer.stop()
+    await groupAllTabs(windowId);
+    console.log(`[AutoGroup] push: groupAllTabs completed successfully for window ID: ${windowId}.`);
   } catch (error: unknown) {
-    console.log(error)
-    timer.error()
+    console.error(`[AutoGroup] push: Error calling groupAllTabs for window ID ${windowId}: `, error)
+  } finally {
+    console.log(`[AutoGroup] push: Setting isRunning to false for window ID: ${windowId}.`);
+    isRunning = false
   }
-  isRunning = false
-}
-
-async function groupTabs(
-  data: Group[],
-  windowId: number = chrome.windows.WINDOW_ID_CURRENT,
-  showName: boolean = true
-): Promise<void> {
-  // Get all groups in the current window
-  const groups = chrome.tabGroups.query({ windowId })
-  // Get all tabs in the current window
-  const tabs = await chrome.tabs.query({ windowId })
-  for (const group of data) {
-    // At some time, they are return empty group name and like "other", "others", "miscellaneous".
-    // So we need to filter out these group
-    switch (group.group_name) {
-      case "":
-      case "Other":
-      case "other":
-      case "Others":
-      case "others":
-      case "Miscellaneous":
-      case "miscellaneous":
-        continue
-      default:
-        break
-    }
-
-    // Because AI is take many time to response,
-    // So we need to filter out the tabs that are not exist
-    const ids = group.ids.filter((id) => {
-      return tabs.find((tab) => tab.id === id)
-    })
-
-    // If there is only one tab in the group, we don't need to group it
-    if (ids.length === 1 || ids.length === 0) {
-      continue
-    }
-
-    // If the group is already exist, we don't need to create it
-    const existGroup = (await groups).find((g) => g.id === group.group_id)
-
-    const g = chrome.tabs.group({
-      tabIds: ids,
-      groupId: existGroup !== undefined ? group.group_id : undefined,
-      createProperties:
-        group.group_id === -1
-          ? {
-              windowId
-            }
-          : undefined
-    })
-
-    const a = await chrome.tabGroups.update(await g, {
-      title: showName ? "🤖 | " + group.group_name : "🤖"
-    })
-    console.log("Grouped ", a.title)
-  }
-  console.log("Grouped all tabs")
-
-  // Move all non grouped tabs to the end
-  const nonGroupTabs = await chrome.tabs.query({
-    windowId,
-    groupId: chrome.tabGroups.TAB_GROUP_ID_NONE
-  })
-
-  for (const tab of nonGroupTabs) {
-    if (tab.id === undefined) {
-      continue
-    }
-    await chrome.tabs.move(tab.id, { index: -1 })
-  }
-  console.log("Moved all non grouped tabs to the end")
-}
-
-interface Group {
-  group_id: number
-  group_name: string
-  ids: number[]
 }

@@ -45,6 +45,27 @@ function IndexPopup(): ReactElement {
           })
         }}
       />
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          gap: 4
+        }}>
+        <label>Rough requirements</label>
+        <input
+          type="text"
+          value={settings?.specialRequirements}
+          onChange={(e) => {
+            void setSettings({
+              ...settings,
+              specialRequirements: e.target.value
+            })
+          }}
+        />
+      </div>
+
       <div
         style={{
           display: "flex",
@@ -63,6 +84,7 @@ function IndexPopup(): ReactElement {
         />
         <label>Show name</label>
       </div>
+
       <div
         style={{
           display: "flex",
@@ -81,6 +103,45 @@ function IndexPopup(): ReactElement {
         />
         <label>Auto Group</label>
       </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center"
+        }}>
+        <input
+          type="checkbox"
+          checked={settings?.keepMiscTab}
+          onChange={() => {
+            void setSettings({
+              ...settings,
+              keepMiscTab: !settings.keepMiscTab
+            })
+          }}
+        />
+        <label>Keep Miscellaneous Tab</label>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center"
+        }}>
+        <input
+          type="checkbox"
+          checked={settings?.keepExistingGroups}
+          onChange={() => {
+            void setSettings({
+              ...settings,
+              keepExistingGroups: !settings.keepExistingGroups
+            })
+          }}
+        />
+        <label>Keep Existing Groups</label>
+      </div>
+
       <div
         style={{
           display: "flex",
